@@ -12,27 +12,27 @@ defmodule GameTest do
   test "state isn't changed for :won or :lost state" do
     for state <- [:won, :lost] do
       game = Game.new_game() |> Map.put(:game_state, state)
-      assert ^game = Game.make_move(game, "x")
+      assert {^game, _} = Game.make_move(game, "x")
     end
   end
 
   test "first occurrence of letter is not already used" do
     game = Game.new_game()
-    |> Game.make_move("x")
+    {game, _} = Game.make_move(game, "x")
 
     assert game.game_state != :already_used
   end
 
   test "second occurrence of letter is already used" do
     game = Game.new_game()
-    |> Game.make_move("x")
-    |> Game.make_move("x")
+    {game, _} = Game.make_move(game, "x")
+    {game, _} = Game.make_move(game, "x")
 
     assert game.game_state == :already_used
   end
 
   test "a good guess is recognized" do
-    game = Game.new_game("wibble")
+    {game, _} = Game.new_game("wibble")
     |> Game.make_move("w")
 
     assert game.game_state == :good_guess
@@ -41,12 +41,12 @@ defmodule GameTest do
 
   test "a win is recognized" do
     game = Game.new_game("wibble")
-    |> Game.make_move("w")
-    |> Game.make_move("i")
-    |> Game.make_move("b")
-    |> Game.make_move("b")
-    |> Game.make_move("l")
-    |> Game.make_move("e")
+    {game, _} = Game.make_move(game, "w")
+    {game, _} = Game.make_move(game, "i")
+    {game, _} = Game.make_move(game, "b")
+    {game, _} = Game.make_move(game, "b")
+    {game, _} = Game.make_move(game, "l")
+    {game, _} = Game.make_move(game, "e")
 
     assert game.game_state == :won
     assert game.turns_left == 7
@@ -54,13 +54,13 @@ defmodule GameTest do
 
   test "a bad guess is recognized" do
     game = Game.new_game("z")
-    |> Game.make_move("a")
-    |> Game.make_move("b")
-    |> Game.make_move("c")
-    |> Game.make_move("d")
-    |> Game.make_move("e")
-    |> Game.make_move("f")
-    |> Game.make_move("g")
+    {game, _} = Game.make_move(game, "a")
+    {game, _} = Game.make_move(game, "b")
+    {game, _} = Game.make_move(game, "c")
+    {game, _} = Game.make_move(game, "d")
+    {game, _} = Game.make_move(game, "e")
+    {game, _} = Game.make_move(game, "f")
+    {game, _} = Game.make_move(game, "g")
 
     assert game.game_state == :lost
     assert game.turns_left == 0
